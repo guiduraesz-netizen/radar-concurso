@@ -44,7 +44,9 @@ Este projeto nasceu numa conversa no claude.ai (05/11/2026). Este arquivo resume
 - Commits de dados feitos pelo bot levam `[skip ci]`.
 
 ## Limitações conhecidas
-- O salário da lista é o **maior do edital** ("até R$"); o salário por cargo só no edital.
+- O salário da lista é o **maior do edital** ("até R$"); o salário por cargo só no edital. O front-end
+  (`prepararSalario()`) procura no texto da notícia o salário citado junto ao nome de um cargo "para você"
+  (achou em poucos: TJSP, TRF3); senão mostra a faixa `salario_faixa` com o aviso "o do seu cargo só no edital".
 - Detecção de TI é por palavra-chave (`extrator.PALAVRAS_TI`); "suporte técnico" às vezes não é TI.
 - Para nacionais, a cidade de prova vem só das cidades citadas no texto da notícia.
 - Taxa/prova às vezes não são achadas quando a notícia usa outro formato de frase.

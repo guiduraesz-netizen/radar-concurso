@@ -361,7 +361,7 @@ dialog .rodape{display:flex;gap:8px;justify-content:flex-end;margin-top:18px}
         <label class="chk"><input type="checkbox" id="fPerfil" checked> Só cargos do meu perfil (TI e administrativo)</label>
         <label class="chk"><input type="checkbox" id="fTI"> Só com cargo de TI</label>
         <input type="number" class="campo" id="fSal" min="0" step="500" inputmode="numeric" placeholder="Salário mínimo (R$)">
-        <div class="dica">O salário da lista é o maior do edital ("até R$").</div>
+        <div class="dica">Usa o salário do seu cargo quando a notícia cita; senão, o maior do edital.</div>
       </div>
 
       <div class="grupo-f">
@@ -630,7 +630,41 @@ function prepararPerfil(c){
   // "TI" passa a seguir as mesmas regras (sem professor de informática, engenharia etc.)
   if(lista.length){ c.cargos_ti = meus.filter(x => x.tipo=="ti").map(x => x.cargo); c.eh_ti = c.cargos_ti.length > 0; }
   else if(!c.manual) c.eh_ti = meus.some(x => x.tipo=="ti");
+  prepararSalario(c);
 }
+
+// ------------------------------------------------------------- salário do cargo
+// O PCI só dá o maior salário do edital; a notícia às vezes cita o salário de um cargo
+// ("Técnico Judiciário ... R$ 9.776,73"). Quando acha, guarda em c.sal_cargo.
+const NAO_SALARIO = /\b(taxa|inscri\w*|aliment\w*|refeic\w*|auxilio|transporte|cesta|abono|insalubridade|periculosidade|hora-aula|por hora|1\/120)\b/;
+const nomeBase = cargo => semAcento(cargo).replace(/\(.*?\)/g," ").split(/\s+-\s+|,|:/)[0].replace(/\b(i{1,3}|iv|v)\b\s*$/,"").replace(/\s+/g," ").trim();
+function salarioNoTexto(c, cargo){
+  const base = nomeBase(cargo);
+  if(base.length < 5 || !c.texto) return null;
+  for(const f of c.texto.split(/(?<=[.;])\s+|\n+/)){
+    const t = semAcento(f), pos = t.indexOf(base);
+    if(pos < 0 || !t.includes("r$")) continue;
+    let melhor = null;
+    for(const m of t.matchAll(/r\$\s*([\d.]+,\d{2})/g)){
+      const perto = t.slice(Math.max(0, m.index-40), m.index+40);
+      if(NAO_SALARIO.test(perto)) continue;
+      const dist = Math.abs(m.index - pos);
+      if(!melhor || dist < melhor.dist) melhor = {dist, v: parseFloat(m[1].replace(/\./g,"").replace(",","."))};
+    }
+    if(melhor && melhor.v >= 500) return melhor.v;
+  }
+  return null;
+}
+function prepararSalario(c){
+  c.sal_cargo = null;
+  const achados = (c.meus_cargos||[]).map(x => ({cargo:x, v:salarioNoTexto(c, x)})).filter(x => x.v);
+  if(achados.length){
+    const vs = achados.map(x => x.v);
+    c.sal_cargo = {min:Math.min(...vs), max:Math.max(...vs), cargo: achados.length==1 || new Set(vs).size==1 ? achados[0].cargo : null};
+  }
+}
+// Salário usado em filtro e ordenação: o do cargo quando conhecido, senão o maior do edital.
+const salRef = c => c.salario_unidade=="hora" ? 0 : (c.sal_cargo ? c.sal_cargo.max : (c.salario_max||0));
 
 const FILTROS = ["fBusca","fSP","fNac","fDist","fSemCidade","fPerfil","fTI","fSal","fAbertos","fPrazo","fNovos","fOrdem"];
 function salvarFiltros(){
@@ -708,7 +742,7 @@ function passa(c){
   if($("#fPerfil").checked && !c.pra_mim) return false;
   if($("#fTI").checked && !c.eh_ti) return false;
   const smin = +$("#fSal").value;
-  if(smin && c.salario_unidade != "hora" && !(c.salario_max >= smin)) return false;
+  if(smin && c.salario_unidade != "hora" && !(salRef(c) >= smin)) return false;
   if(smin && c.salario_unidade == "hora") return false;
   if($("#fAbertos").checked && ABA!="acomp" && ABA!="manual"){
     if(!c.ativo) return false;
@@ -726,7 +760,7 @@ function ehNovo(c){
 function ordenar(a,b){
   const o = $("#fOrdem").value, big = 1e9;
   if(o=="dist") return (a.distancia_km ?? (a.escopo=="NACIONAL"? big-1 : big)) - (b.distancia_km ?? (b.escopo=="NACIONAL"? big-1 : big));
-  if(o=="sal") return (b.salario_unidade=="hora"?0:(b.salario_max||0)) - (a.salario_unidade=="hora"?0:(a.salario_max||0));
+  if(o=="sal") return salRef(b) - salRef(a);
   if(o=="prova") return (a.prova_data||"9999").localeCompare(b.prova_data||"9999");
   if(o=="recente") return (b.primeiro_visto||"").localeCompare(a.primeiro_visto||"");
   const fa = a.dias_fim==null||a.dias_fim<0 ? big : a.dias_fim, fb = b.dias_fim==null||b.dias_fim<0 ? big : b.dias_fim;
@@ -756,7 +790,15 @@ function card(c, conf){
   const local = c.escopo=="NACIONAL"
     ? `${ico("globo")}<span>Nacional</span>`
     : `${ico("pin")}<span>${c.cidade ? `${esc(c.cidade)}${c.distancia_km!=null?` · <b class="num">~${c.distancia_km} km</b>`:""}` : "SP · cidade não identificada"}</span>`;
-  const sal = c.salario_max==null ? "—" : c.salario_unidade=="hora" ? `${brl(c.salario_max)}<span class="s">/hora</span>` : brl(c.salario_max);
+  // salário: o do cargo "para você" se a notícia citar; senão a faixa do edital
+  const fx = c.salario_faixa, sc = c.sal_cargo;
+  let salK = "Salário até", sal, salS = "";
+  if(c.salario_max==null) sal = "—";
+  else if(c.salario_unidade=="hora") sal = `${brl(c.salario_max)}<span class="s">/hora</span>`;
+  else if(sc){ salK = "Salário do cargo"; sal = sc.min==sc.max ? brl(sc.min) : `${brl(sc.min)} a ${brl(sc.max)}`; salS = sc.cargo ? esc(sc.cargo.replace(/\s*\(.*$/,"")) : "dos cargos para você"; }
+  else if(fx && fx[0]>=500 && fx[1]>fx[0]){ salK = "Salário"; sal = `${brl(fx[0])} a ${brl(fx[1])}`; salS = "varia por cargo · o do seu cargo só no edital"; }
+  else if(fx && fx[0]==fx[1]){ salK = "Salário"; sal = brl(c.salario_max); salS = "igual para todos os cargos"; }
+  else sal = brl(c.salario_max);
   const taxa = c.taxa && c.taxa[0]!=null ? (c.taxa[0]==c.taxa[1] ? brl(c.taxa[0]) : `${brl(c.taxa[0])} a ${brl(c.taxa[1])}`) : "—";
   const outrosNaData = c.prova_data && conf[c.prova_data] ? conf[c.prova_data].filter(o=>o!=c.orgao) : [];
   const site = c.site_inscricao ? (c.site_inscricao.startsWith("http") ? c.site_inscricao : "https://" + c.site_inscricao) : null;
@@ -796,7 +838,7 @@ function card(c, conf){
   <div class="fatos">
     <div class="fato"><div class="k">${ico("relogio")}Inscrições até</div><div class="v">${dataBR(c.insc_fim)}</div><div class="s ${prazoCls}">${prazoTxt(c.dias_fim)}</div></div>
     <div class="fato"><div class="k">${ico("cal")}Prova</div><div class="v">${dataBR(c.prova_data)}</div><div class="s">${c.dias_prova!=null&&c.dias_prova>=0?dias(c.dias_prova):""}</div></div>
-    <div class="fato sal"><div class="k">${ico("din")}Salário até</div><div class="v">${sal}</div></div>
+    <div class="fato sal"><div class="k">${ico("din")}${salK}</div><div class="v">${sal}</div>${salS?`<div class="s">${salS}</div>`:""}</div>
     <div class="fato"><div class="k">${ico("pessoas")}Vagas</div><div class="v">${esc(c.vagas_txt||"—")}</div></div>
     <div class="fato"><div class="k">${ico("recibo")}Taxa</div><div class="v">${taxa}</div></div>
   </div>
@@ -837,7 +879,7 @@ function atualizarAtalhos(){
   const n = {
     perto: base.filter(c => c.escopo=="NACIONAL" || (c.distancia_km!=null && c.distancia_km<=50)).length,
     ti: base.filter(c => c.eh_ti).length,
-    medio4: base.filter(c => (c.niveis||[]).some(x=>x=="Médio"||x=="Técnico") && c.salario_unidade!="hora" && c.salario_max>=4000).length,
+    medio4: base.filter(c => (c.niveis||[]).some(x=>x=="Médio"||x=="Técnico") && salRef(c)>=4000).length,
     fecha7: base.filter(c => c.dias_fim!=null && c.dias_fim>=0 && c.dias_fim<=7).length,
     novos: base.filter(ehNovo).length,
   };
