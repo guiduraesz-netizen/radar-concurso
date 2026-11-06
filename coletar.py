@@ -73,6 +73,13 @@ def publicar_site():
     with open(os.path.join(DOCS, "dados", "concursos.json"), "w", encoding="utf-8") as f:
         json.dump(itens, f, ensure_ascii=False, separators=(",", ":"))
     ult = db.ultima_execucao() or {}
+    caminho_meta = os.path.join(DOCS, "dados", "meta.json")
+    if not ult and os.path.exists(caminho_meta):
+        # só republicando o site (sem busca): mantém as informações da última busca
+        with open(caminho_meta, encoding="utf-8") as f:
+            ant = json.load(f)
+        ult = {k: ant.get(k) for k in ("inicio", "fim", "total", "novos", "erros")}
+        atualizador.estado["log"] = ant.get("log", [])
     meta = {"inicio": ult.get("inicio"), "fim": ult.get("fim"), "total": ult.get("total"), "novos": ult.get("novos"),
             "erros": ult.get("erros") or [], "log": atualizador.estado.get("log", [])[-60:], "repo": REPO}
     with open(os.path.join(DOCS, "dados", "meta.json"), "w", encoding="utf-8") as f:
