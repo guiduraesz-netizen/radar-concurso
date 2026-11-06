@@ -7,6 +7,11 @@ Este projeto nasceu numa conversa no claude.ai (05/11/2026). Este arquivo resume
 - Quer acompanhar **concursos públicos** sem montar planilha à mão:
   1. **TI** (analista/técnico de TI, sistemas, redes, suporte, segurança da informação) no estado de SP ou nacionais.
   2. **Qualquer área de nível médio com salário acima de R$ 4 mil**.
+- **Só quer ver cargos que consegue assumir** (pedido de 06/11/2026, a partir do currículo): formação Técnico em
+  Informática + tecnólogo em Segurança da Informação; experiência em redes/NOC (Claro), analista de sistemas jr e
+  auxiliar administrativo. Ou seja: **TI** e **administrativo/escritório/atendimento** (escriturário, recepcionista,
+  almoxarife, técnico judiciário…). Nada de professor, saúde, engenharia, direito, contábeis, motorista etc.
+  Regras em `PERFIL` / `tipoCargo()` no `static/index.html`; o filtro "Só cargos do meu perfil" vem ligado.
 - Prefere concursos com **prova e trabalho perto de casa** (região de Campinas/Americana/Piracicaba), mas quer ver o estado todo com a distância.
 - Responder sempre em **português**, linguagem simples. Ele usa bastante pelo **celular**.
 
