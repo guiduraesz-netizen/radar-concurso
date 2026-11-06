@@ -93,8 +93,17 @@ def parse_lista(html, escopo):
 _TODOS = sorted(((k, v[0]) for k, v in mun.MUNICIPIOS.items() if len(k) >= 3), key=lambda x: -len(x[0]))
 
 
+# Órgãos conhecidos cujo nome não traz a cidade
+_ORGAOS_CIDADE = {"funcamp": "Campinas", "unicamp": "Campinas", "fascamp": "Campinas", "ima campinas": "Campinas",
+                  "8o distrito naval": "São Paulo", "8º distrito naval": "São Paulo", "instituto de pesquisas ambientais": "São Paulo"}
+
+
 def cidade_do_orgao(orgao, titulo, texto=""):
     """Tenta descobrir em qual município de SP fica o órgão."""
+    low = (orgao or "").lower() + " " + (titulo or "").lower()
+    for chave, cidade in _ORGAOS_CIDADE.items():
+        if chave in low:
+            return cidade
     cand = []
     if titulo and " - SP" in titulo:
         cand.append(titulo.split(" - SP")[0])

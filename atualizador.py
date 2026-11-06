@@ -74,6 +74,8 @@ def _rodar(forcar_detalhes):
                 atual = {"id": it["id"], "detalhe": det, "detalhe_em": db.agora()}
                 if it["escopo"] == "SP" and not it.get("cidade"):
                     cid = fonte_pci.cidade_do_orgao(it["orgao"], it["titulo"], det.get("texto", ""))
+                    if not cid and det.get("cidades_citadas"):
+                        cid = det["cidades_citadas"][0]   # ex.: FUNCAMP -> Campinas, Unesp -> cidade do câmpus
                     if cid:
                         atual["cidade"] = cid
                 db.salvar(atual)

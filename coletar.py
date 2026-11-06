@@ -96,7 +96,7 @@ def main():
     seed.semear()
     print(f"Cache: {n} concursos", flush=True)
     if not so_publicar:
-        atualizador.estado["rodando"] = True
+        atualizador.estado.update(rodando=True, inicio=db.agora(), novos=0, erros=[], log=[])
         atualizador._rodar("--forcar" in sys.argv)
     salvar_cache()
     total = publicar_site()

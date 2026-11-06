@@ -1323,7 +1323,7 @@
 {
 "ativo": 1,
 "cargos_resumo": "Vários Cargos",
-"cidade": null,
+"cidade": "Carapicuíba",
 "detalhe": {
 "beneficios": "São oferecidos vale-alimentação de R$ 522,30, auxílio-transporte de R$ 273,69, adicional de insalubridade para Coveiro/Sepultador e Serviços Gerais, e adicional de periculosidade para Jardineiro.",
 "cargos": [
@@ -1413,7 +1413,7 @@
 {
 "ativo": 1,
 "cargos_resumo": "Vários Cargos",
-"cidade": null,
+"cidade": "Pirassununga",
 "detalhe": {
 "beneficios": "São oferecidos vale-alimentação de R$ 522,30, auxílio-transporte de R$ 273,69, adicional de insalubridade para Pedreiro, Pintor e Serviços Gerais, e adicional de periculosidade para Jardineiro.",
 "cargos": [
@@ -1758,7 +1758,7 @@
 {
 "ativo": 1,
 "cargos_resumo": "Vários Cargos",
-"cidade": null,
+"cidade": "Bauru",
 "detalhe": {
 "cargos": [
 {
@@ -1905,7 +1905,7 @@
 {
 "ativo": 1,
 "cargos_resumo": "Professor de Educação Básica I, Professor de Educação Básica II, Professor de Educação Básica III",
-"cidade": null,
+"cidade": "Mogi Guaçu",
 "detalhe": {
 "beneficios": "Os contratados terão direito a vale-alimentação, cesta básica, plano de saúde e plano odontológico, conforme as regras vigentes na contratação.",
 "cargos": [
@@ -2033,7 +2033,7 @@
 {
 "ativo": 1,
 "cargos_resumo": "Bibliotecário, Técnico em Informática",
-"cidade": null,
+"cidade": "Mogi Guaçu",
 "detalhe": {
 "beneficios": "Os contratados terão direito a vale-alimentação, cesta básica, plano de saúde e plano odontológico, conforme as regras vigentes na FEG no momento da contratação.",
 "cargos": [
@@ -2098,7 +2098,7 @@
 {
 "ativo": 1,
 "cargos_resumo": "Vários Cargos",
-"cidade": null,
+"cidade": "Campinas",
 "detalhe": {
 "beneficios": "Os servidores também poderão receber auxílio-refeição/alimentação no valor de R$ 2.150,12 e subsídio parcial de vale-transporte, conforme critérios do edital.",
 "cargos": [
@@ -2411,7 +2411,7 @@
 {
 "ativo": 1,
 "cargos_resumo": "Analista de Pesquisa Clínica Júnior",
-"cidade": null,
+"cidade": "Campinas",
 "detalhe": {
 "cargos": [
 {
@@ -2464,7 +2464,7 @@
 {
 "ativo": 1,
 "cargos_resumo": "Instalador hidráulico",
-"cidade": null,
+"cidade": "Sumaré",
 "detalhe": {
 "cargos": [
 {
@@ -2519,7 +2519,7 @@
 {
 "ativo": 1,
 "cargos_resumo": "Auxiliar Administrativo I",
-"cidade": null,
+"cidade": "Santa Bárbara d'Oeste",
 "detalhe": {
 "cargos": [
 {
@@ -3593,7 +3593,7 @@
 {
 "ativo": 1,
 "cargos_resumo": "Pesquisador Científico I A",
-"cidade": null,
+"cidade": "São Paulo",
 "detalhe": {
 "cargos": [
 {
@@ -4029,7 +4029,7 @@
 {
 "ativo": 1,
 "cargos_resumo": "Vários Cargos",
-"cidade": null,
+"cidade": "São Paulo",
 "detalhe": {
 "cargos": [
 {
@@ -15336,7 +15336,7 @@
 {
 "ativo": 1,
 "cargos_resumo": "Analista em Planejamento, Orçamento e Finanças Públicas",
-"cidade": null,
+"cidade": "São Paulo",
 "detalhe": {
 "cargos": [
 {
@@ -15460,7 +15460,7 @@
 {
 "ativo": 1,
 "cargos_resumo": "Professor Assistente",
-"cidade": null,
+"cidade": "Sorocaba",
 "detalhe": {
 "cargos": [
 {
@@ -15569,7 +15569,7 @@
 {
 "ativo": 1,
 "cargos_resumo": "Professor Substituto",
-"cidade": null,
+"cidade": "Araraquara",
 "detalhe": {
 "beneficios": "Os docentes contratados terão direito ao vale-alimentação no valor de R$ 2.000,02.",
 "cargos": [
@@ -16174,7 +16174,7 @@
 {
 "ativo": 1,
 "cargos_resumo": "Professor Substituto",
-"cidade": null,
+"cidade": "Ilha Solteira",
 "detalhe": {
 "beneficios": "Os docentes contratados terão direito ao vale-alimentação no valor de R$ 2.000,02.",
 "cargos": [
@@ -17322,7 +17322,7 @@
 {
 "ativo": 1,
 "cargos_resumo": "Docente do Ensino Médio e da Educação Profissional Técnica de Nível Médio",
-"cidade": null,
+"cidade": "José Bonifácio",
 "detalhe": {
 "cargos": [
 {
@@ -17935,7 +17935,7 @@
 {
 "ativo": 1,
 "cargos_resumo": "Professor Substituto",
-"cidade": null,
+"cidade": "São Paulo",
 "detalhe": {
 "beneficios": "Os docentes contratados terão direito ao vale-alimentação no valor de R$ 2.000,02.",
 "cargos": [
@@ -18043,7 +18043,7 @@
 {
 "ativo": 1,
 "cargos_resumo": "Professor Substituto",
-"cidade": null,
+"cidade": "São Paulo",
 "detalhe": {
 "beneficios": "Os docentes contratados terão direito ao vale-alimentação no valor de R$ 2.000,02.",
 "cargos": [
