@@ -81,6 +81,14 @@ main{min-width:0}
 .atalho .l .ico{width:14px;height:14px}
 .atalho.on{background:var(--brand-soft);border-color:var(--brand);color:var(--brand-soft-ink)}
 .atalho.on .l{color:var(--brand-soft-ink)}
+/* a barra de atalhos acompanha a rolagem e fica compacta quando "cola" no topo */
+.atalhos{position:sticky;top:var(--hh,58px);z-index:15;background:var(--bg);margin-top:-8px;padding:8px 0}
+.atalhos.colado{box-shadow:0 8px 10px -10px rgba(15,23,42,.35);border-bottom:1px solid var(--line)}
+.atalhos.colado .atalho{flex-direction:row;align-items:center;gap:8px;padding:7px 12px;border-radius:12px;box-shadow:none}
+.atalhos.colado .atalho .n{font-size:16px;letter-spacing:0}
+.atalho .tc{display:none}
+.atalhos.colado .atalho .t{display:none}.atalhos.colado .atalho .tc{display:inline}
+.atalhos.colado .atalho .l{white-space:nowrap}
 
 /* barra de busca e abas */
 .barra{display:flex;gap:10px;align-items:center;margin-bottom:12px}
@@ -231,7 +239,7 @@ dialog .rodape{display:flex;gap:8px;justify-content:flex-end;margin-top:18px}
   .painel-rodape button{width:100%;padding:12px}
   .fundo{position:fixed;inset:0;background:rgba(10,15,30,.45);z-index:45}
   .fundo.aberto{display:block}
-  .atalhos{display:flex;overflow-x:auto;scrollbar-width:none;margin:0 -12px 12px;padding:0 12px 2px;scroll-snap-type:x mandatory}
+  .atalhos{display:flex;overflow-x:auto;scrollbar-width:none;margin:-8px -12px 12px;padding:8px 12px;scroll-snap-type:x mandatory;scroll-padding:0 12px}
   .atalhos::-webkit-scrollbar{display:none}
   .atalho{flex:0 0 auto;min-width:132px;scroll-snap-align:start}
   .barra{flex-wrap:wrap}
@@ -371,11 +379,11 @@ dialog .rodape{display:flex;gap:8px;justify-content:flex-end;margin-top:18px}
 
   <main>
     <div class="atalhos" id="presets">
-      <button class="atalho" data-p="perto"><span class="n num" data-n="perto">–</span><span class="l"><svg class="ico"><use href="#i-pin"/></svg>Até 50 km + nacionais</span></button>
-      <button class="atalho" data-p="ti"><span class="n num" data-n="ti">–</span><span class="l"><svg class="ico"><use href="#i-chip"/></svg>Com cargo de TI</span></button>
-      <button class="atalho" data-p="medio4"><span class="n num" data-n="medio4">–</span><span class="l"><svg class="ico"><use href="#i-escola"/></svg>Médio + R$ 4 mil</span></button>
-      <button class="atalho" data-p="fecha7"><span class="n num" data-n="fecha7">–</span><span class="l"><svg class="ico"><use href="#i-relogio"/></svg>Fecham em 7 dias</span></button>
-      <button class="atalho" data-p="novos"><span class="n num" data-n="novos">–</span><span class="l"><svg class="ico"><use href="#i-brilho"/></svg>Novos</span></button>
+      <button class="atalho" data-p="perto"><span class="n num" data-n="perto">–</span><span class="l"><svg class="ico"><use href="#i-pin"/></svg><span class="t">Até 50 km + nacionais</span><span class="tc">Perto</span></span></button>
+      <button class="atalho" data-p="ti"><span class="n num" data-n="ti">–</span><span class="l"><svg class="ico"><use href="#i-chip"/></svg><span class="t">Com cargo de TI</span><span class="tc">TI</span></span></button>
+      <button class="atalho" data-p="medio4"><span class="n num" data-n="medio4">–</span><span class="l"><svg class="ico"><use href="#i-escola"/></svg><span class="t">Médio + R$ 4 mil</span><span class="tc">Médio 4 mil</span></span></button>
+      <button class="atalho" data-p="fecha7"><span class="n num" data-n="fecha7">–</span><span class="l"><svg class="ico"><use href="#i-relogio"/></svg><span class="t">Fecham em 7 dias</span><span class="tc">7 dias</span></span></button>
+      <button class="atalho" data-p="novos"><span class="n num" data-n="novos">–</span><span class="l"><svg class="ico"><use href="#i-brilho"/></svg><span class="t">Novos</span><span class="tc">Novos</span></span></button>
     </div>
 
     <div class="barra">
@@ -957,9 +965,29 @@ $("#btnFechar").onclick = fecharFiltros;
 $("#btnVer").onclick = () => { fecharFiltros(); window.scrollTo({top:0, behavior:"smooth"}); };
 $("#fundo").onclick = fecharFiltros;
 
+// ------------------------------------------------------------- barra de atalhos fixa
+(function(){
+  const barra = $("#presets"), marca = document.createElement("div");
+  barra.before(marca);
+  const alturaTopo = () => document.documentElement.style.setProperty("--hh", $("header").offsetHeight + "px");
+  const verificar = () => barra.classList.toggle("colado", marca.getBoundingClientRect().top < $("header").offsetHeight - 1);
+  alturaTopo(); verificar();
+  addEventListener("resize", () => { alturaTopo(); verificar(); });
+  addEventListener("scroll", verificar, {passive:true});
+  // com mouse: a rodinha também rola a barra para os lados quando ela não cabe na tela
+  barra.addEventListener("wheel", e => {
+    if(barra.scrollWidth > barra.clientWidth && Math.abs(e.deltaY) > Math.abs(e.deltaX)){ barra.scrollLeft += e.deltaY; e.preventDefault(); }
+  }, {passive:false});
+})();
+
 // ------------------------------------------------------------- início
 $$("#tabs button").forEach(b => b.onclick = () => { ABA = b.dataset.t; $$("#tabs button").forEach(x=>x.classList.toggle("on", x==b)); render(); });
-$$("#presets [data-p], #btnLimpar").forEach(b => b.onclick = () => aplicarPreset(b.dataset.p));
+$$("#presets [data-p], #btnLimpar").forEach(b => b.onclick = () => {
+  aplicarPreset(b.dataset.p);
+  // se a barra está presa no topo, volta ao começo da lista para ver o resultado
+  const barra = $("#presets");
+  if(barra.classList.contains("colado")) window.scrollTo({top: barra.previousElementSibling.getBoundingClientRect().top + scrollY - $("header").offsetHeight, behavior:"smooth"});
+});
 FILTROS.forEach(id => $("#"+id).addEventListener("input", () => { distTxt(); render(); }));
 $$(".fNivel").forEach(x => x.addEventListener("change", render));
 carregarFiltros(); distTxt();
