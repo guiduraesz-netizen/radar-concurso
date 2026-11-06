@@ -81,6 +81,14 @@ main{min-width:0}
 .atalho .l .ico{width:14px;height:14px}
 .atalho.on{background:var(--brand-soft);border-color:var(--brand);color:var(--brand-soft-ink)}
 .atalho.on .l{color:var(--brand-soft-ink)}
+/* a barra de atalhos acompanha a rolagem e fica compacta quando "cola" no topo */
+.atalhos{position:sticky;top:var(--hh,58px);z-index:15;background:var(--bg);margin-top:-8px;padding:8px 0}
+.atalhos.colado{box-shadow:0 8px 10px -10px rgba(15,23,42,.35);border-bottom:1px solid var(--line)}
+.atalhos.colado .atalho{flex-direction:row;align-items:center;gap:8px;padding:7px 12px;border-radius:12px;box-shadow:none}
+.atalhos.colado .atalho .n{font-size:16px;letter-spacing:0}
+.atalho .tc{display:none}
+.atalhos.colado .atalho .t{display:none}.atalhos.colado .atalho .tc{display:inline}
+.atalhos.colado .atalho .l{white-space:nowrap}
 
 /* barra de busca e abas */
 .barra{display:flex;gap:10px;align-items:center;margin-bottom:12px}
@@ -168,7 +176,9 @@ input[type=range]{width:100%;accent-color:var(--brand);margin:8px 0 2px}
 .fato .s.bad,.v.bad{color:var(--bad)}.fato .s.warn,.v.warn{color:var(--warn)}.fato .s.ok,.v.ok{color:var(--ok)}
 .fato.sal .v{color:var(--ink);font-size:15.5px}
 .cargos{margin-top:12px;color:var(--ink-2);font-size:13.5px;line-height:1.5}
-.cargos b{color:var(--ti)}
+.cargos b{color:var(--brand)}
+.cargos .outros{color:var(--muted)}
+.b.adm{background:var(--brand-soft);color:var(--brand-soft-ink);border-color:transparent}
 .cargos mark,.det mark{background:var(--ti-soft);color:var(--ti);font-weight:650;border-radius:4px;padding:0 3px}
 details.det-box{margin-top:12px}
 details.det-box summary{cursor:pointer;color:var(--brand);font-weight:650;font-size:13.5px;display:inline-flex;align-items:center;gap:6px;list-style:none;user-select:none}
@@ -231,7 +241,7 @@ dialog .rodape{display:flex;gap:8px;justify-content:flex-end;margin-top:18px}
   .painel-rodape button{width:100%;padding:12px}
   .fundo{position:fixed;inset:0;background:rgba(10,15,30,.45);z-index:45}
   .fundo.aberto{display:block}
-  .atalhos{display:flex;overflow-x:auto;scrollbar-width:none;margin:0 -12px 12px;padding:0 12px 2px;scroll-snap-type:x mandatory}
+  .atalhos{display:flex;overflow-x:auto;scrollbar-width:none;margin:-8px -12px 12px;padding:8px 12px;scroll-snap-type:x mandatory;scroll-padding:0 12px}
   .atalhos::-webkit-scrollbar{display:none}
   .atalho{flex:0 0 auto;min-width:132px;scroll-snap-align:start}
   .barra{flex-wrap:wrap}
@@ -349,6 +359,7 @@ dialog .rodape{display:flex;gap:8px;justify-content:flex-end;margin-top:18px}
 
       <div class="grupo-f">
         <h3>Área e salário</h3>
+        <label class="chk"><input type="checkbox" id="fPerfil" checked> Só cargos do meu perfil (TI e administrativo)</label>
         <label class="chk"><input type="checkbox" id="fTI"> Só com cargo de TI</label>
         <input type="number" class="campo" id="fSal" min="0" step="500" inputmode="numeric" placeholder="Salário mínimo (R$)">
         <div class="dica">O salário da lista é o maior do edital ("até R$").</div>
@@ -372,11 +383,11 @@ dialog .rodape{display:flex;gap:8px;justify-content:flex-end;margin-top:18px}
 
   <main>
     <div class="atalhos" id="presets">
-      <button class="atalho" data-p="perto"><span class="n num" data-n="perto">–</span><span class="l"><svg class="ico"><use href="#i-pin"/></svg>Até 50 km + nacionais</span></button>
-      <button class="atalho" data-p="ti"><span class="n num" data-n="ti">–</span><span class="l"><svg class="ico"><use href="#i-chip"/></svg>Com cargo de TI</span></button>
-      <button class="atalho" data-p="medio4"><span class="n num" data-n="medio4">–</span><span class="l"><svg class="ico"><use href="#i-escola"/></svg>Médio + R$ 4 mil</span></button>
-      <button class="atalho" data-p="fecha7"><span class="n num" data-n="fecha7">–</span><span class="l"><svg class="ico"><use href="#i-relogio"/></svg>Fecham em 7 dias</span></button>
-      <button class="atalho" data-p="novos"><span class="n num" data-n="novos">–</span><span class="l"><svg class="ico"><use href="#i-brilho"/></svg>Novos</span></button>
+      <button class="atalho" data-p="perto"><span class="n num" data-n="perto">–</span><span class="l"><svg class="ico"><use href="#i-pin"/></svg><span class="t">Até 50 km + nacionais</span><span class="tc">Perto</span></span></button>
+      <button class="atalho" data-p="ti"><span class="n num" data-n="ti">–</span><span class="l"><svg class="ico"><use href="#i-chip"/></svg><span class="t">Com cargo de TI</span><span class="tc">TI</span></span></button>
+      <button class="atalho" data-p="medio4"><span class="n num" data-n="medio4">–</span><span class="l"><svg class="ico"><use href="#i-escola"/></svg><span class="t">Médio + R$ 4 mil</span><span class="tc">Médio 4 mil</span></span></button>
+      <button class="atalho" data-p="fecha7"><span class="n num" data-n="fecha7">–</span><span class="l"><svg class="ico"><use href="#i-relogio"/></svg><span class="t">Fecham em 7 dias</span><span class="tc">7 dias</span></span></button>
+      <button class="atalho" data-p="novos"><span class="n num" data-n="novos">–</span><span class="l"><svg class="ico"><use href="#i-brilho"/></svg><span class="t">Novos</span><span class="tc">Novos</span></span></button>
     </div>
 
     <div class="barra">
@@ -589,7 +600,40 @@ async function apiEstatica(url, body){
 }
 
 // ------------------------------------------------------------- filtros
-const FILTROS = ["fBusca","fSP","fNac","fDist","fSemCidade","fTI","fSal","fAbertos","fPrazo","fNovos","fOrdem"];
+// ------------------------------------------------------------- perfil (currículo)
+// Cargos que dá para assumir com a formação atual: Técnico em Informática + tecnólogo em
+// Segurança da Informação, experiência em redes/TI e como auxiliar administrativo.
+// Cargo que não cai em "ti" nem em "adm" fica de fora; "fora" barra profissões que
+// exigem outra formação ou registro (professor, saúde, engenharia, direito, contábeis…).
+const PERFIL = {
+  sempre: /\b(monitor de informatica|monitor de laboratorio de informatica)\b/,
+  ti: /\b(informatica|tecnologia da informacao|ti|t\.i|sistemas de informac\w*|(analista|analise|desenvolvimento|tecnico|suporte|administrador|administracao) (de|em) sistemas|redes( de computadores)?|suporte tecnico|suporte em|suporte de ti|seguranca da informacao|ciberseguranca|computacao|computador(es)?|software|programador|programacao|desenvolvedor|banco de dados|ciencias? de dados|analista de dados|processamento de dados|telecomunicac\w*|devops|hardware)\b/,
+  adm: /\b(administrativ\w*|(assistente|auxiliar|agente|tecnico|oficial) (de|em) administracao|escriturario|escritorio|almoxarif\w*|recepcionista|telefonista|atendente|auxiliar de atendimento|atendimento ao publico|secretario de escola|secretaria escolar|secretario escolar|oficial de escola|agente de organizacao escolar|escrevente|tecnico judiciario|tecnico legislativo|agente legislativo|tecnico bancario|digitador|auxiliar de secretaria|assistente de gestao|agente publico)\b/,
+  fora: /\b(professor\w*|docente|peb|pteb|instrutor|monitor\w*|educador\w*|medic\w*|enferm\w*|odonto\w*|dentist\w*|dentari\w*|consultorio|engenh\w*|advog\w*|procurador|psicolog\w*|nutri\w*|fisioter\w*|farmac\w*|veterinari\w*|contador|contab\w*|assistente social|servico social|motorista|tratorista|operador de maquinas|radiolog\w*|saude bucal|pedagog\w*|diretor|coordenador pedagogico|biomedic\w*|bibliotec\w*|arquitet\w*|administrador|pesquisador\w*|laboratorio|pintor|atendente de (saude|educacao)|bioinformatica)\b/,
+};
+const semAcento = s => (s||"").normalize("NFD").replace(/[̀-ͯ]/g,"").toLowerCase();
+function tipoCargo(cargo){
+  const t = semAcento(cargo);
+  if(PERFIL.sempre.test(t)) return "ti";
+  if(PERFIL.fora.test(t)) return null;
+  if(PERFIL.ti.test(t)) return "ti";
+  if(PERFIL.adm.test(t)) return "adm";
+  return null;
+}
+// Marca em cada concurso quais cargos servem (c.meus_cargos) e se ele entra no perfil (c.pra_mim).
+function prepararPerfil(c){
+  const lista = (c.cargos||[]).map(x => x.cargo);
+  const fonte = lista.length ? lista : [c.cargos_resumo, c.titulo].filter(Boolean);
+  const meus = fonte.map(x => ({cargo:x, tipo:tipoCargo(x)})).filter(x => x.tipo);
+  c.meus_cargos = lista.length ? meus.map(x => x.cargo) : [];
+  c.tem_adm = meus.some(x => x.tipo=="adm");
+  c.pra_mim = !!c.manual || meus.length > 0;
+  // "TI" passa a seguir as mesmas regras (sem professor de informática, engenharia etc.)
+  if(lista.length){ c.cargos_ti = meus.filter(x => x.tipo=="ti").map(x => x.cargo); c.eh_ti = c.cargos_ti.length > 0; }
+  else if(!c.manual) c.eh_ti = meus.some(x => x.tipo=="ti");
+}
+
+const FILTROS = ["fBusca","fSP","fNac","fDist","fSemCidade","fPerfil","fTI","fSal","fAbertos","fPrazo","fNovos","fOrdem"];
 function salvarFiltros(){
   const st = {aba: ABA, niveis: $$(".fNivel").filter(x=>x.checked).map(x=>x.value)};
   FILTROS.forEach(id => { const el = $("#"+id); st[id] = el.type == "checkbox" ? el.checked : el.value; });
@@ -617,7 +661,7 @@ function aplicarPreset(p){
   const set = (id,v)=>{ const el=$("#"+id); if(el.type=="checkbox") el.checked=v; else el.value=v; };
   const desligar = ATIVO[p] && ATIVO[p]();
   if(p=="limpar"){ set("fBusca",""); set("fSP",true); set("fNac",true); set("fDist",700); set("fSemCidade",true);
-    set("fTI",false); set("fSal",""); set("fAbertos",true); set("fPrazo",""); set("fNovos",false); $$(".fNivel").forEach(x=>x.checked=false); }
+    set("fPerfil",true); set("fTI",false); set("fSal",""); set("fAbertos",true); set("fPrazo",""); set("fNovos",false); $$(".fNivel").forEach(x=>x.checked=false); }
   if(p=="perto"){ if(desligar){ set("fDist",700); set("fSemCidade",true); if($("#fOrdem").value=="dist") set("fOrdem","prazo"); }
                   else { set("fDist",50); set("fSemCidade",false); set("fNac",true); set("fOrdem","dist"); } }
   if(p=="ti"){ set("fTI",!desligar); }
@@ -633,6 +677,7 @@ function qtdFiltrosAtivos(){
   if(+$("#fDist").value < 700) n++;
   if($$(".fNivel").some(x=>x.checked)) n++;
   if($("#fTI").checked) n++;
+  if(!$("#fPerfil").checked) n++;
   if(+$("#fSal").value) n++;
   if($("#fPrazo").value) n++;
   if(!$("#fAbertos").checked) n++;
@@ -661,6 +706,7 @@ function passa(c){
   }
   const nv = $$(".fNivel").filter(x=>x.checked).map(x=>x.value);
   if(nv.length && !nv.some(n => (c.niveis||[]).includes(n))) return false;
+  if($("#fPerfil").checked && !c.pra_mim) return false;
   if($("#fTI").checked && !c.eh_ti) return false;
   const smin = +$("#fSal").value;
   if(smin && c.salario_unidade != "hora" && !(c.salario_max >= smin)) return false;
@@ -695,8 +741,8 @@ function conflitos(){
   return m;
 }
 function marcarCargo(txt, c){
-  const ti = (c.cargos_ti||[]).includes(txt);
-  return ti ? `<mark>${esc(txt)}</mark>` : esc(txt);
+  const meu = (c.meus_cargos||[]).includes(txt);
+  return meu ? `<mark>${esc(txt)}</mark>` : esc(txt);
 }
 function prazoTxt(n){
   if(n == null) return "";
@@ -715,9 +761,10 @@ function card(c, conf){
   const taxa = c.taxa && c.taxa[0]!=null ? (c.taxa[0]==c.taxa[1] ? brl(c.taxa[0]) : `${brl(c.taxa[0])} a ${brl(c.taxa[1])}`) : "—";
   const outrosNaData = c.prova_data && conf[c.prova_data] ? conf[c.prova_data].filter(o=>o!=c.orgao) : [];
   const site = c.site_inscricao ? (c.site_inscricao.startsWith("http") ? c.site_inscricao : "https://" + c.site_inscricao) : null;
-  const cargosLista = (c.cargos||[]).length
-    ? (c.cargos_ti.length ? `<b>TI:</b> ${c.cargos_ti.map(esc).join("; ")}` + (c.cargos.length>c.cargos_ti.length?` · +${c.cargos.length-c.cargos_ti.length} outros cargos`:"")
-                          : esc(c.cargos.slice(0,6).map(x=>x.cargo).join("; ")) + (c.cargos.length>6?` · +${c.cargos.length-6}`:""))
+  const meus = c.meus_cargos||[], todos = c.cargos||[];
+  const cargosLista = todos.length
+    ? (meus.length ? `<b>Para você:</b> ${meus.map(esc).join("; ")}` + (todos.length>meus.length?` · <span class="outros">+${todos.length-meus.length} outros cargos</span>`:"")
+                   : esc(todos.slice(0,6).map(x=>x.cargo).join("; ")) + (todos.length>6?` · +${todos.length-6}`:""))
     : esc(c.cargos_resumo||"");
   let grupos = "";
   if((c.cargos||[]).length){
@@ -738,6 +785,7 @@ function card(c, conf){
   <div class="badges">
     ${novo?'<span class="b novo">Novo</span>':""}
     ${c.eh_ti?'<span class="b ti">Tem TI</span>':""}
+    ${c.tem_adm?'<span class="b adm">Administrativo</span>':""}
     ${c.previsto?'<span class="b prev">Previsto</span>':""}
     ${c.insc_obs?`<span class="b warn">${esc(c.insc_obs)}</span>`:""}
     ${!c.ativo?'<span class="b">Saiu da lista (encerrado)</span>':""}
@@ -786,7 +834,7 @@ function card(c, conf){
 }
 
 function atualizarAtalhos(){
-  const base = DADOS.filter(c => !c.oculto && c.ativo && !(c.dias_fim != null && c.dias_fim < 0));
+  const base = DADOS.filter(c => !c.oculto && c.ativo && !(c.dias_fim != null && c.dias_fim < 0) && (!$("#fPerfil").checked || c.pra_mim));
   const n = {
     perto: base.filter(c => c.escopo=="NACIONAL" || (c.distancia_km!=null && c.distancia_km<=50)).length,
     ti: base.filter(c => c.eh_ti).length,
@@ -864,7 +912,7 @@ $("#btnCsv").onclick = () => {
   fecharMenu();
   const vis = DADOS.filter(passa).sort(ordenar);
   const cols = [["Órgão","orgao"],["Cidade","cidade"],["Distância (km)","distancia_km"],["Abrangência",c=>c.escopo=="NACIONAL"?"Nacional":"SP"],
-    ["Cargos de TI",c=>(c.cargos_ti||[]).join("; ")],["Cargos",c=>(c.cargos||[]).map(x=>x.cargo).join("; ")||c.cargos_resumo],
+    ["Cargos para mim",c=>(c.meus_cargos||[]).join("; ")],["Cargos de TI",c=>(c.cargos_ti||[]).join("; ")],["Cargos",c=>(c.cargos||[]).map(x=>x.cargo).join("; ")||c.cargos_resumo],
     ["Escolaridade",c=>(c.niveis||[]).join(", ")],["Vagas","vagas_txt"],["Salário até (R$)",c=>c.salario_max!=null?String(c.salario_max).replace(".",","):""],
     ["Inscrição início",c=>dataBR(c.insc_inicio)],["Inscrição fim",c=>dataBR(c.insc_fim)],["Data da prova",c=>dataBR(c.prova_data)],
     ["Taxa",c=>c.taxa&&c.taxa[0]!=null?`${c.taxa[0]} a ${c.taxa[1]}`.replace(/\./g,","):""],["Site inscrição","site_inscricao"],["Link","url"],
@@ -910,6 +958,7 @@ function quando(iso){
 async function carregar(silencioso){
   const j = await api("/api/concursos");
   DADOS = j.itens; CFG = j.config; ULTIMA = j.ultima;
+  DADOS.forEach(prepararPerfil);
   $("#cidadeBaseTxt").textContent = CFG.cidade_base;
   $("#ultima").textContent = ULTIMA ? `Atualizado ${quando(ULTIMA.fim)} · ${ULTIMA.total} concursos na fonte · ${ULTIMA.novos} novos` : "Ainda não buscou nada";
   $("#ultima").title = ULTIMA ? `Última busca: ${new Date(ULTIMA.fim).toLocaleString("pt-BR")}` : "";
@@ -958,9 +1007,29 @@ $("#btnFechar").onclick = fecharFiltros;
 $("#btnVer").onclick = () => { fecharFiltros(); window.scrollTo({top:0, behavior:"smooth"}); };
 $("#fundo").onclick = fecharFiltros;
 
+// ------------------------------------------------------------- barra de atalhos fixa
+(function(){
+  const barra = $("#presets"), marca = document.createElement("div");
+  barra.before(marca);
+  const alturaTopo = () => document.documentElement.style.setProperty("--hh", $("header").offsetHeight + "px");
+  const verificar = () => barra.classList.toggle("colado", marca.getBoundingClientRect().top < $("header").offsetHeight - 1);
+  alturaTopo(); verificar();
+  addEventListener("resize", () => { alturaTopo(); verificar(); });
+  addEventListener("scroll", verificar, {passive:true});
+  // com mouse: a rodinha também rola a barra para os lados quando ela não cabe na tela
+  barra.addEventListener("wheel", e => {
+    if(barra.scrollWidth > barra.clientWidth && Math.abs(e.deltaY) > Math.abs(e.deltaX)){ barra.scrollLeft += e.deltaY; e.preventDefault(); }
+  }, {passive:false});
+})();
+
 // ------------------------------------------------------------- início
 $$("#tabs button").forEach(b => b.onclick = () => { ABA = b.dataset.t; $$("#tabs button").forEach(x=>x.classList.toggle("on", x==b)); render(); });
-$$("#presets [data-p], #btnLimpar").forEach(b => b.onclick = () => aplicarPreset(b.dataset.p));
+$$("#presets [data-p], #btnLimpar").forEach(b => b.onclick = () => {
+  aplicarPreset(b.dataset.p);
+  // se a barra está presa no topo, volta ao começo da lista para ver o resultado
+  const barra = $("#presets");
+  if(barra.classList.contains("colado")) window.scrollTo({top: barra.previousElementSibling.getBoundingClientRect().top + scrollY - $("header").offsetHeight, behavior:"smooth"});
+});
 FILTROS.forEach(id => $("#"+id).addEventListener("input", () => { distTxt(); render(); }));
 $$(".fNivel").forEach(x => x.addEventListener("change", render));
 carregarFiltros(); distTxt();
