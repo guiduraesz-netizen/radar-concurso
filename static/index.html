@@ -1,0 +1,631 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Radar de Concursos</title>
+<link rel="icon" href="data:,">
+<style>
+:root{
+  --bg:#f4f5f7; --panel:#ffffff; --ink:#1c2230; --muted:#5d6678; --line:#e3e6ec;
+  --accent:#1f5eff; --accent-ink:#ffffff; --ok:#1a7f4b; --warn:#b26a00; --bad:#c62828;
+  --chip:#eef1f6; --ti:#6b3fd1; --novo:#0a8f8f; --shadow:0 1px 2px rgba(16,24,40,.06),0 1px 3px rgba(16,24,40,.08);
+}
+@media (prefers-color-scheme: dark){
+  :root{--bg:#11141b;--panel:#1a1f2a;--ink:#e7eaf0;--muted:#9aa3b5;--line:#2b3242;--chip:#242b39;
+        --accent:#5b8cff;--ok:#3fbf7f;--warn:#e0a03a;--bad:#ef6a6a;--ti:#a98bff;--novo:#35c2c2;--shadow:none}
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;background:var(--bg);color:var(--ink);font-size:14px}
+a{color:var(--accent)}
+header{position:sticky;top:0;z-index:5;background:var(--panel);border-bottom:1px solid var(--line);padding:10px 18px;display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+header h1{font-size:18px;margin:0;letter-spacing:.2px}
+header .sub{color:var(--muted);font-size:12px}
+.grow{flex:1}
+button,.btn{font:inherit;border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:8px;padding:7px 12px;cursor:pointer}
+button.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink);font-weight:600}
+button:disabled{opacity:.6;cursor:default}
+.progress{width:220px;height:8px;background:var(--chip);border-radius:6px;overflow:hidden;display:none}
+.progress>i{display:block;height:100%;background:var(--accent);width:0}
+.wrap{display:grid;grid-template-columns:280px 1fr;gap:16px;padding:16px 18px;max-width:1500px;margin:0 auto}
+@media (max-width:900px){.wrap{grid-template-columns:1fr}}
+aside{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px;align-self:start;position:sticky;top:70px;box-shadow:var(--shadow)}
+@media (max-width:900px){aside{position:static;display:none}aside.aberto{display:block}
+  header{position:static;padding:10px 12px;gap:8px}header button{padding:6px 10px;font-size:13px}#btnLog{display:none}
+  .wrap{padding:10px}.card{padding:12px}.btnFiltros{display:inline-block!important}}
+.btnFiltros{display:none}
+aside h3{font-size:12px;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);margin:14px 0 6px}
+aside h3:first-child{margin-top:0}
+aside label{display:flex;gap:6px;align-items:center;margin:4px 0;cursor:pointer}
+aside input[type=text],aside input[type=number],aside select{width:100%;padding:7px 8px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink);font:inherit}
+.presets{display:flex;flex-wrap:wrap;gap:6px}
+.presets button{padding:5px 9px;font-size:12px;border-radius:20px}
+.presets button.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+.range-row{display:flex;gap:8px;align-items:center}
+.range-row input[type=range]{flex:1}
+.tabs{display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap;align-items:center}
+.tabs button{border-radius:20px}
+.tabs button.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.count{color:var(--muted);margin-left:auto;font-size:13px}
+.aviso{background:#fff4e5;color:#7a4b00;border:1px solid #f3d3a1;border-radius:10px;padding:10px 12px;margin-bottom:12px}
+@media (prefers-color-scheme: dark){.aviso{background:#2c2312;color:#f1c47a;border-color:#5a4520}}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin-bottom:10px;box-shadow:var(--shadow)}
+.card.inativo{opacity:.65}
+.top{display:flex;gap:10px;align-items:flex-start}
+.top h2{font-size:16px;margin:0 0 2px;line-height:1.3}
+.star{font-size:20px;line-height:1;border:none;background:none;padding:0 2px;color:var(--muted)}
+.star.on{color:#f5b400}
+.meta{color:var(--muted);font-size:13px}
+.badges{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0}
+.b{font-size:11px;padding:2px 8px;border-radius:20px;background:var(--chip);color:var(--ink);white-space:nowrap}
+.b.ti{background:var(--ti);color:#fff}.b.novo{background:var(--novo);color:#fff}.b.prev{background:#7a7f8c;color:#fff}
+.b.warn{background:var(--warn);color:#fff}.b.bad{background:var(--bad);color:#fff}.b.ok{background:var(--ok);color:#fff}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px 16px;margin-top:8px}
+.grid .k{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px}
+.grid .v{font-weight:600}
+.v.bad{color:var(--bad)}.v.warn{color:var(--warn)}.v.ok{color:var(--ok)}
+.cargos{margin-top:8px;color:var(--muted);font-size:13px}
+.cargos mark{background:transparent;color:var(--ti);font-weight:600}
+details{margin-top:10px;border-top:1px dashed var(--line);padding-top:8px}
+summary{cursor:pointer;color:var(--accent);font-weight:600}
+.det p{margin:6px 0;line-height:1.45}
+.det ul{margin:4px 0 8px 18px;padding:0}
+.det .grupo{font-weight:600;margin-top:6px}
+.acoes{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:10px}
+.acoes select,.acoes input[type=text]{padding:5px 8px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink);font:inherit}
+textarea{width:100%;min-height:60px;margin-top:8px;padding:8px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink);font:inherit}
+.vazio{text-align:center;color:var(--muted);padding:50px 10px}
+dialog{border:1px solid var(--line);border-radius:12px;background:var(--panel);color:var(--ink);width:min(640px,95vw);padding:18px}
+dialog::backdrop{background:rgba(0,0,0,.4)}
+dialog .f{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+dialog .f label{display:flex;flex-direction:column;gap:4px;font-size:12px;color:var(--muted)}
+dialog .f input,dialog .f textarea{padding:7px 8px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink);font:inherit}
+dialog .full{grid-column:1/-1}
+.log{font-family:ui-monospace,Consolas,monospace;font-size:12px;white-space:pre-wrap;max-height:260px;overflow:auto;background:var(--bg);padding:8px;border-radius:8px}
+</style>
+</head>
+<body>
+<header>
+  <div>
+    <h1>📡 Radar de Concursos</h1>
+    <div class="sub" id="ultima">carregando…</div>
+  </div>
+  <div class="grow"></div>
+  <div class="progress" id="prog"><i></i></div>
+  <span class="sub" id="etapa"></span>
+  <button id="btnLog" title="Ver o que aconteceu na última busca">Log</button>
+  <button id="btnNovo">+ Adicionar concurso</button>
+  <button id="btnCsv">Exportar planilha</button>
+  <button id="btnBackup" style="display:none" title="Suas estrelas, status, notas e cadastros ficam neste navegador. Salve um backup ou leve para outro aparelho.">Meus dados</button>
+  <input type="file" id="arqBackup" accept=".json" style="display:none">
+  <button class="primary" id="btnAtualizar">Atualizar agora</button>
+</header>
+
+<div class="wrap">
+  <aside id="painel">
+    <h3>Atalhos</h3>
+    <div class="presets" id="presets">
+      <button data-p="perto">Perto (até 50 km)</button>
+      <button data-p="ti">Só TI</button>
+      <button data-p="medio4">Nível médio + R$ 4 mil</button>
+      <button data-p="fecha7">Fecha em 7 dias</button>
+      <button data-p="novos">Novos</button>
+      <button data-p="limpar">Limpar filtros</button>
+    </div>
+
+    <h3>Buscar</h3>
+    <input type="text" id="fBusca" placeholder="órgão, cargo, cidade…">
+
+    <h3>Onde</h3>
+    <label><input type="checkbox" id="fSP" checked> Estado de SP</label>
+    <label><input type="checkbox" id="fNac" checked> Nacionais (prova em várias cidades)</label>
+    <div class="range-row"><input type="range" id="fDist" min="10" max="700" step="10" value="700"><span id="fDistTxt"></span></div>
+    <label><input type="checkbox" id="fSemCidade" checked> Incluir os de SP sem cidade identificada</label>
+    <div class="sub">Distância a partir de <b id="cidadeBaseTxt">—</b> · <a href="#" id="trocarCidade">trocar</a></div>
+
+    <h3>Escolaridade</h3>
+    <label><input type="checkbox" class="fNivel" value="Fundamental"> Fundamental</label>
+    <label><input type="checkbox" class="fNivel" value="Médio"> Médio</label>
+    <label><input type="checkbox" class="fNivel" value="Técnico"> Técnico</label>
+    <label><input type="checkbox" class="fNivel" value="Superior"> Superior</label>
+
+    <h3>Área e salário</h3>
+    <label><input type="checkbox" id="fTI"> Só com cargo de TI</label>
+    <input type="number" id="fSal" min="0" step="500" placeholder="Salário mínimo (R$)">
+    <div class="sub" style="margin-top:4px">O salário da lista é o maior do edital ("até R$").</div>
+
+    <h3>Prazo</h3>
+    <label><input type="checkbox" id="fAbertos" checked> Esconder inscrições encerradas</label>
+    <select id="fPrazo">
+      <option value="">Qualquer prazo</option>
+      <option value="3">Fecha em até 3 dias</option>
+      <option value="7">Fecha em até 7 dias</option>
+      <option value="15">Fecha em até 15 dias</option>
+      <option value="30">Fecha em até 30 dias</option>
+    </select>
+    <label><input type="checkbox" id="fNovos"> Só os que apareceram na última busca</label>
+
+    <h3>Ordenar por</h3>
+    <select id="fOrdem">
+      <option value="prazo">Fim da inscrição (mais urgente primeiro)</option>
+      <option value="dist">Distância</option>
+      <option value="sal">Maior salário</option>
+      <option value="prova">Data da prova</option>
+      <option value="recente">Mais recentes</option>
+    </select>
+  </aside>
+
+  <main>
+    <button class="btnFiltros" id="btnFiltros" style="margin-bottom:10px;width:100%">Filtros e atalhos ▾</button>
+    <div class="tabs" id="tabs">
+      <button data-t="todos" class="on">Todos</button>
+      <button data-t="acomp">★ Acompanhando</button>
+      <button data-t="manual">Previstos e manuais</button>
+      <button data-t="ocultos">Ocultos</button>
+      <span class="count" id="count"></span>
+    </div>
+    <div id="avisos"></div>
+    <div id="lista"></div>
+  </main>
+</div>
+
+<dialog id="dlgManual">
+  <form method="dialog" id="formManual">
+    <h3 style="margin-top:0" id="dlgTitulo">Adicionar concurso</h3>
+    <div class="f">
+      <input type="hidden" name="id">
+      <label class="full">Órgão *<input name="orgao" required></label>
+      <label class="full">Cargos<input name="cargos_resumo" placeholder="ex.: Analista de TI (2 vagas)"></label>
+      <label>Cidade (SP)<input name="cidade" list="listaCidades"></label>
+      <label>Salário (R$)<input name="salario_max" placeholder="4850,00"></label>
+      <label>Início inscrição<input type="date" name="insc_inicio"></label>
+      <label>Fim inscrição<input type="date" name="insc_fim"></label>
+      <label>Data da prova<input type="date" name="prova_data"></label>
+      <label>Taxa (R$)<input name="taxa"></label>
+      <label>Vagas<input name="vagas_txt"></label>
+      <label>Site de inscrição<input name="site_inscricao"></label>
+      <label class="full">Link (notícia ou edital)<input name="url" type="url"></label>
+      <label class="full">Observações<textarea name="descricao"></textarea></label>
+      <div class="full" style="display:flex;gap:14px;flex-wrap:wrap">
+        <label style="flex-direction:row"><input type="checkbox" name="nv" value="Fundamental"> Fundamental</label>
+        <label style="flex-direction:row"><input type="checkbox" name="nv" value="Médio"> Médio</label>
+        <label style="flex-direction:row"><input type="checkbox" name="nv" value="Técnico"> Técnico</label>
+        <label style="flex-direction:row"><input type="checkbox" name="nv" value="Superior"> Superior</label>
+        <label style="flex-direction:row"><input type="checkbox" name="previsto"> Ainda previsto</label>
+        <label style="flex-direction:row"><input type="checkbox" name="nacional"> Nacional</label>
+      </div>
+    </div>
+    <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:14px">
+      <button value="cancel" formnovalidate>Cancelar</button>
+      <button class="primary" value="ok">Salvar</button>
+    </div>
+  </form>
+</dialog>
+
+<dialog id="dlgLog">
+  <h3 style="margin-top:0">Última busca</h3>
+  <div class="log" id="logTxt"></div>
+  <div style="text-align:right;margin-top:10px"><button onclick="this.closest('dialog').close()">Fechar</button></div>
+</dialog>
+
+<datalist id="listaCidades"></datalist>
+
+<script>
+const $ = s => document.querySelector(s);
+const $$ = s => [...document.querySelectorAll(s)];
+let DADOS = [], CFG = {}, ULTIMA = null, ABA = "todos";
+const STATUS = ["", "Previsto", "Vou me inscrever", "Inscrito", "Estudando", "Prova feita", "Aprovado", "Descartado"];
+
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const brl = v => v == null ? "—" : v.toLocaleString("pt-BR", {style:"currency", currency:"BRL"});
+const dataBR = iso => iso ? iso.slice(0,10).split("-").reverse().join("/") : "—";
+const dias = n => n == null ? "" : n < 0 ? `encerrou há ${-n} dia${n==-1?"":"s"}` : n == 0 ? "hoje" : n == 1 ? "amanhã" : `em ${n} dias`;
+const classePrazo = n => n == null ? "" : n < 0 ? "" : n <= 3 ? "bad" : n <= 10 ? "warn" : "ok";
+
+async function api(url, body){
+  if(window.MODO_ESTATICO) return apiEstatica(url, body);
+  const r = await fetch(url, body ? {method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify(body)} : {});
+  const j = await r.json().catch(()=>({}));
+  if(!r.ok) throw new Error(j.erro || r.statusText);
+  return j;
+}
+
+// ---------------------------------------------------------------------------
+// Modo site estático (GitHub Pages): os dados vêm de dados/*.json, gerados pelo
+// GitHub Actions; o que é seu (estrelas, status, notas, cadastros) fica no navegador.
+// ---------------------------------------------------------------------------
+const LS = {
+  get(k, d){ try{ return JSON.parse(localStorage.getItem(k)) ?? d; }catch(e){ return d; } },
+  set(k, v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){} }
+};
+let EST = null;
+async function carregarEstatico(){
+  if(EST) return EST;
+  const ts = Date.now();
+  const [itens, meta, muni] = await Promise.all([
+    fetch(`dados/concursos.json?${ts}`).then(r=>r.json()),
+    fetch(`dados/meta.json?${ts}`).then(r=>r.json()).catch(()=>({})),
+    fetch("dados/municipios.json").then(r=>r.json())]);
+  const norm = s => (s||"").normalize("NFD").replace(/[̀-ͯ]/g,"").toLowerCase().replace(/['’]/g,"").replace(/-/g," ").trim();
+  const porNorm = {}; Object.keys(muni).forEach(n => porNorm[norm(n)] = n);
+  EST = {itens, meta, muni, porNorm, norm};
+  return EST;
+}
+function distKm(a, b){
+  const A = EST.muni[a], B = EST.muni[b]; if(!A || !B) return null;
+  const r = Math.PI/180, dLa=(B[0]-A[0])*r, dLo=(B[1]-A[1])*r;
+  const h = Math.sin(dLa/2)**2 + Math.cos(A[0]*r)*Math.cos(B[0]*r)*Math.sin(dLo/2)**2;
+  return Math.round(2*6371*Math.asin(Math.sqrt(h))*1.25);
+}
+function diasAte(iso){
+  if(!iso) return null;
+  const h = new Date(); h.setHours(0,0,0,0);
+  const [y,m,d] = iso.slice(0,10).split("-").map(Number);
+  return Math.round((new Date(y,m-1,d) - h)/86400000);
+}
+async function apiEstatica(url, body){
+  const E = await carregarEstatico();
+  const cfg = Object.assign({cidade_base:"Nova Odessa"}, LS.get("radar_config", {}));
+  const pessoal = LS.get("radar_pessoal", {});
+  const manuais = LS.get("radar_manual", []);
+  if(url == "/api/concursos"){
+    const itens = E.itens.concat(manuais).map(c0 => {
+      const c = Object.assign({}, c0, {acompanhar:false,status:"",prioridade:"",inscrito:false,notas:"",oculto:false}, pessoal[c0.id]||{});
+      c.distancia_km = c.cidade ? distKm(cfg.cidade_base, c.cidade) : null;
+      const dc = (c.cidades_citadas||[]).map(x=>distKm(cfg.cidade_base,x)).filter(x=>x!=null);
+      c.menor_dist_citada = dc.length ? Math.min(...dc) : null;
+      c.dias_fim = diasAte(c.insc_fim); c.dias_prova = diasAte(c.prova_data);
+      return c;
+    });
+    return {itens, config:cfg, ultima: E.meta && E.meta.fim ? E.meta : null};
+  }
+  if(url == "/api/status") return {rodando:false, log:(E.meta.log||[]), etapa:""};
+  if(url == "/api/cidades") return Object.keys(E.muni).sort((a,b)=>a.localeCompare(b,"pt"));
+  if(url == "/api/atualizar"){
+    alert("No site online a busca roda sozinha 2 vezes por dia no GitHub.\n\nPara rodar agora: na página que vai abrir, clique em \"Run workflow\" e espere uns 5 minutos.");
+    window.open(`https://github.com/${window.REPO}/actions/workflows/coletar.yml`, "_blank");
+    return {};
+  }
+  if(url == "/api/pessoal"){
+    pessoal[body.id] = Object.assign(pessoal[body.id]||{}, body.campos);
+    Object.keys(body.campos).forEach(k => { if(["acompanhar","inscrito","oculto"].includes(k)) pessoal[body.id][k] = !!body.campos[k]; });
+    LS.set("radar_pessoal", pessoal); return {ok:true};
+  }
+  if(url == "/api/config"){
+    const n = E.porNorm[E.norm(body.cidade_base)];
+    if(!n) throw new Error("Cidade não encontrada em SP");
+    cfg.cidade_base = n; LS.set("radar_config", cfg); return cfg;
+  }
+  if(url == "/api/manual"){
+    if(!(body.orgao||"").trim()) throw new Error("Informe o órgão");
+    const num = x => x ? parseFloat(String(x).replace(/\./g,"").replace(",", ".")) || null : null;
+    const id = body.id || ("local:" + Date.now());
+    const cidade = E.porNorm[E.norm(body.cidade)] || body.cidade || null;
+    const item = {id, fonte:"Manual", manual:true, ativo:true, orgao:body.orgao.trim(), cargos_resumo:body.cargos_resumo||"",
+      cidade, url:body.url||null, uf: body.nacional?"NACIONAL":"SP", escopo: body.nacional?"NACIONAL":"SP",
+      insc_inicio:body.insc_inicio||null, insc_fim:body.insc_fim||null, prova_data:body.prova_data||null,
+      salario_max:num(body.salario_max), salario_unidade:"mês", vagas_txt:body.vagas_txt||"", niveis:body.niveis||[],
+      taxa:[num(body.taxa), num(body.taxa)], site_inscricao:body.site_inscricao||null, descricao:body.descricao||"",
+      previsto:!!body.previsto, cargos:[], cargos_ti:[], cargos_medio:[], cidades_citadas:[], tem_detalhe:false,
+      eh_ti: /inform|tecnologia|sistemas|\bti\b|dados|redes|software|computa/i.test(body.orgao+" "+body.cargos_resumo),
+      primeiro_visto:new Date().toISOString()};
+    if(String(id).startsWith("local:")){
+      const i = manuais.findIndex(x=>x.id==id); if(i>=0) manuais[i]=item; else manuais.push(item);
+      LS.set("radar_manual", manuais);
+    } else {
+      alert("Este concurso veio do site e não pode ser editado aqui. Use as Notas para anotar o que quiser.");
+    }
+    return {ok:true, id};
+  }
+  if(url == "/api/manual/excluir"){
+    if(String(body.id).startsWith("local:")) LS.set("radar_manual", manuais.filter(x=>x.id!=body.id));
+    else { pessoal[body.id] = Object.assign(pessoal[body.id]||{}, {oculto:true}); LS.set("radar_pessoal", pessoal); }
+    return {ok:true};
+  }
+  throw new Error("Rota desconhecida: " + url);
+}
+
+// ------------------------------------------------------------- filtros
+const FILTROS = ["fBusca","fSP","fNac","fDist","fSemCidade","fTI","fSal","fAbertos","fPrazo","fNovos","fOrdem"];
+function salvarFiltros(){
+  const st = {aba: ABA, niveis: $$(".fNivel").filter(x=>x.checked).map(x=>x.value)};
+  FILTROS.forEach(id => { const el = $("#"+id); st[id] = el.type == "checkbox" ? el.checked : el.value; });
+  try{ localStorage.setItem("radar_filtros", JSON.stringify(st)); }catch(e){}
+}
+function carregarFiltros(){
+  let st = null; try{ st = JSON.parse(localStorage.getItem("radar_filtros")||"null"); }catch(e){}
+  if(!st) return;
+  FILTROS.forEach(id => { const el = $("#"+id); if(!(id in st)) return; if(el.type=="checkbox") el.checked = st[id]; else el.value = st[id]; });
+  $$(".fNivel").forEach(x => x.checked = (st.niveis||[]).includes(x.value));
+  if(st.aba){ ABA = st.aba; $$("#tabs button").forEach(b=>b.classList.toggle("on", b.dataset.t==ABA)); }
+}
+function distTxt(){ const v = +$("#fDist").value; $("#fDistTxt").textContent = v >= 700 ? "sem limite" : `até ${v} km`; }
+
+function aplicarPreset(p){
+  const set = (id,v)=>{ const el=$("#"+id); if(el.type=="checkbox") el.checked=v; else el.value=v; };
+  if(p=="limpar"){ set("fBusca",""); set("fSP",true); set("fNac",true); set("fDist",700); set("fSemCidade",true);
+    set("fTI",false); set("fSal",""); set("fAbertos",true); set("fPrazo",""); set("fNovos",false); $$(".fNivel").forEach(x=>x.checked=false); }
+  if(p=="perto"){ set("fDist",50); set("fSemCidade",false); set("fNac",true); set("fOrdem","dist"); }
+  if(p=="ti"){ set("fTI",true); }
+  if(p=="medio4"){ $$(".fNivel").forEach(x=>x.checked = (x.value=="Médio"||x.value=="Técnico")); set("fSal",4000); }
+  if(p=="fecha7"){ set("fPrazo","7"); set("fOrdem","prazo"); }
+  if(p=="novos"){ set("fNovos",true); }
+  distTxt(); render();
+}
+
+function passa(c){
+  if(ABA=="ocultos") { if(!c.oculto) return false; }
+  else if(c.oculto) return false;
+  if(ABA=="acomp" && !c.acompanhar) return false;
+  if(ABA=="manual" && !c.manual) return false;
+
+  const q = $("#fBusca").value.trim().toLowerCase();
+  if(q){
+    const hay = [c.orgao,c.titulo,c.cidade,c.cargos_resumo,(c.cargos||[]).map(x=>x.cargo).join(" "),c.notas].join(" ").toLowerCase();
+    if(!q.split(/\s+/).every(t=>hay.includes(t))) return false;
+  }
+  const nac = c.escopo == "NACIONAL";
+  if(nac && !$("#fNac").checked) return false;
+  if(!nac && !$("#fSP").checked) return false;
+  const lim = +$("#fDist").value;
+  if(!nac && lim < 700){
+    if(c.distancia_km == null){ if(!$("#fSemCidade").checked) return false; }
+    else if(c.distancia_km > lim) return false;
+  }
+  const nv = $$(".fNivel").filter(x=>x.checked).map(x=>x.value);
+  if(nv.length && !nv.some(n => (c.niveis||[]).includes(n))) return false;
+  if($("#fTI").checked && !c.eh_ti) return false;
+  const smin = +$("#fSal").value;
+  if(smin && c.salario_unidade != "hora" && !(c.salario_max >= smin)) return false;
+  if(smin && c.salario_unidade == "hora") return false;
+  if($("#fAbertos").checked && ABA!="acomp" && ABA!="manual"){
+    if(!c.ativo) return false;
+    if(c.dias_fim != null && c.dias_fim < 0) return false;
+  }
+  const pz = +$("#fPrazo").value;
+  if(pz && !(c.dias_fim != null && c.dias_fim >= 0 && c.dias_fim <= pz)) return false;
+  if($("#fNovos").checked && !ehNovo(c)) return false;
+  return true;
+}
+function ehNovo(c){
+  if(!ULTIMA || !c.primeiro_visto || c.manual) return false;
+  return c.primeiro_visto >= ULTIMA.inicio;
+}
+function ordenar(a,b){
+  const o = $("#fOrdem").value, big = 1e9;
+  if(o=="dist") return (a.distancia_km ?? (a.escopo=="NACIONAL"? big-1 : big)) - (b.distancia_km ?? (b.escopo=="NACIONAL"? big-1 : big));
+  if(o=="sal") return (b.salario_unidade=="hora"?0:(b.salario_max||0)) - (a.salario_unidade=="hora"?0:(a.salario_max||0));
+  if(o=="prova") return (a.prova_data||"9999").localeCompare(b.prova_data||"9999");
+  if(o=="recente") return (b.primeiro_visto||"").localeCompare(a.primeiro_visto||"");
+  const fa = a.dias_fim==null||a.dias_fim<0 ? big : a.dias_fim, fb = b.dias_fim==null||b.dias_fim<0 ? big : b.dias_fim;
+  return fa - fb;
+}
+
+// ------------------------------------------------------------- render
+function conflitos(){
+  const m = {};
+  DADOS.filter(c=>c.acompanhar && c.prova_data).forEach(c => (m[c.prova_data] = m[c.prova_data]||[]).push(c.orgao));
+  return m;
+}
+function marcarCargo(txt, c){
+  const ti = (c.cargos_ti||[]).includes(txt);
+  return ti ? `<mark>${esc(txt)}</mark>` : esc(txt);
+}
+function card(c, conf){
+  const novo = ehNovo(c);
+  const prazoCls = classePrazo(c.dias_fim);
+  const local = c.escopo=="NACIONAL" ? "Nacional" : (c.cidade ? `${esc(c.cidade)}${c.distancia_km!=null?` · ~${c.distancia_km} km`:""}` : "SP (cidade não identificada)");
+  const sal = c.salario_max==null ? "—" : c.salario_unidade=="hora" ? `${brl(c.salario_max)}/hora` : brl(c.salario_max);
+  const taxa = c.taxa && c.taxa[0]!=null ? (c.taxa[0]==c.taxa[1] ? brl(c.taxa[0]) : `${brl(c.taxa[0])} a ${brl(c.taxa[1])}`) : "—";
+  const outrosNaData = c.prova_data && conf[c.prova_data] ? conf[c.prova_data].filter(o=>o!=c.orgao) : [];
+  const site = c.site_inscricao ? (c.site_inscricao.startsWith("http") ? c.site_inscricao : "https://" + c.site_inscricao.replace(/^www\./,"www.")) : null;
+  const cargosLista = (c.cargos||[]).length
+    ? (c.cargos_ti.length ? `<b>TI:</b> ${c.cargos_ti.map(esc).join("; ")}` + (c.cargos.length>c.cargos_ti.length?` · +${c.cargos.length-c.cargos_ti.length} outros cargos`:"")
+                          : esc(c.cargos.slice(0,6).map(x=>x.cargo).join("; ")) + (c.cargos.length>6?` · +${c.cargos.length-6}`:""))
+    : esc(c.cargos_resumo||"");
+  let grupos = "";
+  if((c.cargos||[]).length){
+    let g = null, html = "";
+    c.cargos.forEach(x => { if(x.grupo!==g){ if(g!==null) html+="</ul>"; g=x.grupo; html += (g?`<div class="grupo">${esc(g)}</div>`:"")+"<ul>"; } html += `<li>${marcarCargo(x.cargo,c)}</li>`; });
+    grupos = html + "</ul>";
+  }
+  const frase = (rot,t) => t ? `<p><b>${rot}:</b> ${esc(t)}</p>` : "";
+  const st = STATUS.map(s=>`<option ${s==c.status?"selected":""} value="${esc(s)}">${s||"Status…"}</option>`).join("");
+  return `<div class="card ${c.ativo?"":"inativo"}" data-id="${esc(c.id)}">
+  <div class="top">
+    <button class="star ${c.acompanhar?"on":""}" data-a="star" title="Acompanhar">${c.acompanhar?"★":"☆"}</button>
+    <div style="flex:1">
+      <h2>${esc(c.orgao)}</h2>
+      <div class="meta">${local}${c.titulo?` · ${esc(c.titulo)}`:""}</div>
+      <div class="badges">
+        ${novo?'<span class="b novo">Novo</span>':""}
+        ${c.eh_ti?'<span class="b ti">Tem TI</span>':""}
+        ${c.previsto?'<span class="b prev">Previsto</span>':""}
+        ${c.insc_obs?`<span class="b warn">${esc(c.insc_obs)}</span>`:""}
+        ${!c.ativo?'<span class="b">Saiu da lista (encerrado)</span>':""}
+        ${c.inscrito?'<span class="b ok">Inscrito</span>':""}
+        ${(c.niveis||[]).map(n=>`<span class="b">${esc(n)}</span>`).join("")}
+        ${outrosNaData.length?`<span class="b bad" title="${esc(outrosNaData.join(", "))}">Prova no mesmo dia de outro acompanhado</span>`:""}
+      </div>
+    </div>
+  </div>
+  <div class="grid">
+    <div><div class="k">Inscrições até</div><div class="v ${prazoCls}">${dataBR(c.insc_fim)} <span style="font-weight:400">${dias(c.dias_fim)}</span></div></div>
+    <div><div class="k">Prova</div><div class="v">${dataBR(c.prova_data)} <span style="font-weight:400">${c.dias_prova!=null&&c.dias_prova>=0?dias(c.dias_prova):""}</span></div></div>
+    <div><div class="k">Salário (até)</div><div class="v">${sal}</div></div>
+    <div><div class="k">Vagas</div><div class="v">${esc(c.vagas_txt||"—")}</div></div>
+    <div><div class="k">Taxa</div><div class="v">${taxa}</div></div>
+  </div>
+  <div class="cargos">${cargosLista}</div>
+  <details>
+    <summary>Detalhes e links</summary>
+    <div class="det">
+      ${c.descricao?`<p>${esc(c.descricao)}</p>`:""}
+      ${grupos}
+      ${frase("Salário", c.salario_frase)}${frase("Benefícios", c.beneficios)}${frase("Inscrições", c.insc_frase)}
+      ${frase("Taxa", c.taxa_frase)}${frase("Prova", c.prova_frase)}${frase("Etapas", c.etapas)}
+      ${frase("Jornada", c.jornada)}${frase("Regime", c.regime)}
+      ${c.cidades_citadas&&c.cidades_citadas.length?`<p><b>Cidades de SP citadas no texto:</b> ${esc(c.cidades_citadas.join(", "))}${c.menor_dist_citada!=null?` (a mais perto fica a ~${c.menor_dist_citada} km)`:""}</p>`:""}
+      ${!c.tem_detalhe && !c.manual?"<p><i>Os detalhes ainda não foram lidos. Clique em Atualizar agora.</i></p>":""}
+      <p>
+        ${c.url?`<a href="${esc(c.url)}" target="_blank" rel="noopener">Abrir notícia${c.fonte&&c.fonte.startsWith("PCI")?" (PCI) – o edital fica lá":""}</a>`:""}
+        ${site?` · <a href="${esc(site)}" target="_blank" rel="noopener">Site da banca/inscrição</a>`:""}
+        ${c.banca?` · Banca: ${esc(c.banca)}`:""}
+      </p>
+    </div>
+  </details>
+  <div class="acoes">
+    <select data-a="status">${st}</select>
+    <select data-a="prioridade">${["","Alta","Média","Baixa"].map(p=>`<option ${p==c.prioridade?"selected":""} value="${p}">${p||"Prioridade…"}</option>`).join("")}</select>
+    <label><input type="checkbox" data-a="inscrito" ${c.inscrito?"checked":""}> Inscrito</label>
+    <button data-a="notas">${c.notas?"📝 Notas":"Notas"}</button>
+    <button data-a="ocultar">${c.oculto?"Mostrar de novo":"Ocultar"}</button>
+    ${c.manual && (!window.MODO_ESTATICO || String(c.id).startsWith("local:"))?'<button data-a="editar">Editar</button><button data-a="excluir">Excluir</button>':""}
+  </div>
+  <textarea data-a="txtnotas" placeholder="Suas anotações" style="display:${c.notas?"block":"none"}">${esc(c.notas)}</textarea>
+</div>`;
+}
+
+function render(){
+  salvarFiltros();
+  const conf = conflitos();
+  const vis = DADOS.filter(passa).sort(ordenar);
+  $("#count").textContent = `${vis.length} de ${DADOS.filter(c=>!c.oculto).length} concursos`;
+  $("#lista").innerHTML = vis.length ? vis.map(c=>card(c,conf)).join("") :
+    `<div class="vazio">Nenhum concurso com esses filtros.${DADOS.length?"":" Clique em <b>Atualizar agora</b> para buscar."}</div>`;
+}
+
+// ------------------------------------------------------------- ações nos cards
+$("#lista").addEventListener("click", async ev => {
+  const el = ev.target.closest("[data-a]"); if(!el) return;
+  const cardEl = el.closest(".card"), id = cardEl.dataset.id, c = DADOS.find(x=>x.id==id);
+  const a = el.dataset.a;
+  if(a=="star"){ c.acompanhar = !c.acompanhar; await api("/api/pessoal",{id,campos:{acompanhar:c.acompanhar?1:0}}); render(); }
+  if(a=="ocultar"){ c.oculto = !c.oculto; await api("/api/pessoal",{id,campos:{oculto:c.oculto?1:0}}); render(); }
+  if(a=="notas"){ const t = cardEl.querySelector("textarea"); t.style.display = t.style.display=="none"?"block":"none"; t.focus(); }
+  if(a=="editar"){ abrirManual(c); }
+  if(a=="excluir" && confirm("Excluir este concurso da sua lista?")){ await api("/api/manual/excluir",{id}); carregar(); }
+});
+$("#lista").addEventListener("change", async ev => {
+  const el = ev.target.closest("[data-a]"); if(!el) return;
+  const id = el.closest(".card").dataset.id, c = DADOS.find(x=>x.id==id), a = el.dataset.a;
+  if(a=="status"){ c.status = el.value; const campos = {status:el.value}; if(el.value=="Inscrito"){ c.inscrito=true; campos.inscrito=1; } if(el.value && !c.acompanhar){ c.acompanhar=true; campos.acompanhar=1; } await api("/api/pessoal",{id,campos}); render(); }
+  if(a=="prioridade"){ c.prioridade = el.value; await api("/api/pessoal",{id,campos:{prioridade:el.value}}); }
+  if(a=="inscrito"){ c.inscrito = el.checked; await api("/api/pessoal",{id,campos:{inscrito:el.checked?1:0}}); render(); }
+  if(a=="txtnotas"){ c.notas = el.value; await api("/api/pessoal",{id,campos:{notas:el.value}}); }
+});
+
+// ------------------------------------------------------------- manual
+function abrirManual(c){
+  const f = $("#formManual"); f.reset();
+  $("#dlgTitulo").textContent = c ? "Editar concurso" : "Adicionar concurso";
+  if(c){
+    f.id.value=c.id; f.orgao.value=c.orgao||""; f.cargos_resumo.value=c.cargos_resumo||""; f.cidade.value=c.cidade||"";
+    f.salario_max.value=c.salario_max!=null?String(c.salario_max).replace(".",","):""; f.insc_inicio.value=(c.insc_inicio||"").slice(0,10);
+    f.insc_fim.value=(c.insc_fim||"").slice(0,10); f.prova_data.value=(c.prova_data||"").slice(0,10);
+    f.taxa.value=c.taxa&&c.taxa[0]!=null?String(c.taxa[0]).replace(".",","):""; f.vagas_txt.value=c.vagas_txt||"";
+    f.site_inscricao.value=c.site_inscricao||""; f.url.value=c.url||""; f.descricao.value=c.descricao||"";
+    f.previsto.checked=!!c.previsto; f.nacional.checked=c.escopo=="NACIONAL";
+    $$("#formManual [name=nv]").forEach(x=>x.checked=(c.niveis||[]).includes(x.value));
+  }
+  $("#dlgManual").showModal();
+}
+$("#dlgManual").addEventListener("close", async () => {
+  if($("#dlgManual").returnValue != "ok") return;
+  const f = $("#formManual");
+  const body = {id:f.id.value||undefined, orgao:f.orgao.value, cargos_resumo:f.cargos_resumo.value, cidade:f.cidade.value,
+    salario_max:f.salario_max.value, insc_inicio:f.insc_inicio.value, insc_fim:f.insc_fim.value, prova_data:f.prova_data.value,
+    taxa:f.taxa.value, vagas_txt:f.vagas_txt.value, site_inscricao:f.site_inscricao.value, url:f.url.value, descricao:f.descricao.value,
+    previsto:f.previsto.checked, nacional:f.nacional.checked, niveis:$$("#formManual [name=nv]").filter(x=>x.checked).map(x=>x.value)};
+  try{ await api("/api/manual", body); carregar(); }catch(e){ alert(e.message); }
+});
+$("#btnNovo").onclick = () => abrirManual(null);
+
+// ------------------------------------------------------------- CSV
+$("#btnCsv").onclick = () => {
+  const vis = DADOS.filter(passa).sort(ordenar);
+  const cols = [["Órgão","orgao"],["Cidade","cidade"],["Distância (km)","distancia_km"],["Abrangência",c=>c.escopo=="NACIONAL"?"Nacional":"SP"],
+    ["Cargos de TI",c=>(c.cargos_ti||[]).join("; ")],["Cargos",c=>(c.cargos||[]).map(x=>x.cargo).join("; ")||c.cargos_resumo],
+    ["Escolaridade",c=>(c.niveis||[]).join(", ")],["Vagas","vagas_txt"],["Salário até (R$)",c=>c.salario_max!=null?String(c.salario_max).replace(".",","):""],
+    ["Inscrição início",c=>dataBR(c.insc_inicio)],["Inscrição fim",c=>dataBR(c.insc_fim)],["Data da prova",c=>dataBR(c.prova_data)],
+    ["Taxa",c=>c.taxa&&c.taxa[0]!=null?`${c.taxa[0]} a ${c.taxa[1]}`.replace(/\./g,","):""],["Site inscrição","site_inscricao"],["Link","url"],
+    ["Status","status"],["Prioridade","prioridade"],["Inscrito",c=>c.inscrito?"Sim":""],["Notas","notas"]];
+  const val = (c,k) => typeof k=="function" ? k(c) : c[k];
+  const linhas = [cols.map(x=>x[0])].concat(vis.map(c=>cols.map(x=>val(c,x[1]))));
+  const csv = "﻿" + linhas.map(l=>l.map(v=>`"${String(v??"").replace(/"/g,'""')}"`).join(";")).join("\r\n");
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(new Blob([csv],{type:"text/csv;charset=utf-8"}));
+  a.download = `concursos_${new Date().toISOString().slice(0,10)}.csv`; a.click();
+};
+
+// ------------------------------------------------------------- atualização
+let poll = null;
+async function acompanharBusca(){
+  const s = await api("/api/status");
+  $("#btnAtualizar").disabled = s.rodando;
+  $("#prog").style.display = s.rodando ? "block" : "none";
+  $("#etapa").textContent = s.rodando ? `${s.etapa}${s.total?` (${s.feito}/${s.total})`:""}` : "";
+  $("#prog i").style.width = s.total ? `${Math.round(100*s.feito/s.total)}%` : "15%";
+  $("#logTxt").textContent = (s.log||[]).join("\n") || "Nada ainda.";
+  if(s.rodando){ if(!poll) poll = setInterval(async()=>{ const was = true; await acompanharBusca(); }, 1500); if(s.feito && s.feito % 15 == 0) carregar(true); }
+  else if(poll){ clearInterval(poll); poll = null; carregar(); }
+}
+$("#btnAtualizar").onclick = async () => { await api("/api/atualizar",{}); acompanharBusca(); };
+$("#btnLog").onclick = () => $("#dlgLog").showModal();
+
+$("#trocarCidade").onclick = async ev => {
+  ev.preventDefault();
+  const n = prompt("Cidade de referência para calcular a distância (SP):", CFG.cidade_base||"Nova Odessa");
+  if(!n) return;
+  try{ await api("/api/config",{cidade_base:n}); carregar(); }catch(e){ alert(e.message); }
+};
+
+async function carregar(silencioso){
+  const j = await api("/api/concursos");
+  DADOS = j.itens; CFG = j.config; ULTIMA = j.ultima;
+  $("#cidadeBaseTxt").textContent = CFG.cidade_base;
+  $("#ultima").textContent = ULTIMA ? `Última busca: ${new Date(ULTIMA.fim).toLocaleString("pt-BR")} · ${ULTIMA.total} concursos na fonte · ${ULTIMA.novos} novos` : "Ainda não buscou nada";
+  const av = [];
+  if(ULTIMA && ULTIMA.erros && ULTIMA.erros.length) av.push(`<div class="aviso"><b>Atenção na última busca:</b><br>${ULTIMA.erros.map(esc).join("<br>")}</div>`);
+  $("#avisos").innerHTML = av.join("");
+  render();
+}
+
+// ------------------------------------------------------------- backup (modo online)
+if(window.MODO_ESTATICO){
+  $("#btnBackup").style.display = "";
+  $("#btnAtualizar").textContent = "Atualizar no GitHub";
+  $("#btnBackup").onclick = () => {
+    const op = prompt("Digite 1 para BAIXAR um backup dos seus dados (estrelas, status, notas, cadastros)\nDigite 2 para RESTAURAR um backup", "1");
+    if(op == "1"){
+      const dados = {versao:1, salvo_em:new Date().toISOString(), pessoal:LS.get("radar_pessoal",{}), manual:LS.get("radar_manual",[]), config:LS.get("radar_config",{})};
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(new Blob([JSON.stringify(dados,null,1)],{type:"application/json"}));
+      a.download = `radar_meus_dados_${new Date().toISOString().slice(0,10)}.json`; a.click();
+    } else if(op == "2") $("#arqBackup").click();
+  };
+  $("#arqBackup").onchange = async ev => {
+    const f = ev.target.files[0]; if(!f) return;
+    try{
+      const d = JSON.parse(await f.text());
+      if(!confirm("Isso substitui os dados salvos neste navegador pelos do backup. Continuar?")) return;
+      LS.set("radar_pessoal", d.pessoal||{}); LS.set("radar_manual", d.manual||[]); LS.set("radar_config", d.config||{});
+      carregar();
+    }catch(e){ alert("Arquivo inválido: " + e.message); }
+  };
+}
+
+// ------------------------------------------------------------- celular: filtros recolhíveis
+$("#btnFiltros").onclick = () => { const a = $("#painel"); a.classList.toggle("aberto"); $("#btnFiltros").textContent = a.classList.contains("aberto") ? "Fechar filtros ▴" : "Filtros e atalhos ▾"; };
+
+// ------------------------------------------------------------- início
+$$("#tabs button").forEach(b => b.onclick = () => { ABA = b.dataset.t; $$("#tabs button").forEach(x=>x.classList.toggle("on", x==b)); render(); });
+$$("#presets button").forEach(b => b.onclick = () => aplicarPreset(b.dataset.p));
+FILTROS.forEach(id => $("#"+id).addEventListener("input", () => { distTxt(); render(); }));
+$$(".fNivel").forEach(x => x.addEventListener("change", render));
+carregarFiltros(); distTxt();
+api("/api/cidades").then(l => $("#listaCidades").innerHTML = l.map(n=>`<option value="${esc(n)}">`).join(""));
+carregar().then(acompanharBusca);
+</script>
+</body>
+</html>

@@ -1,0 +1,5 @@
+__pycache__/
+*.pyc
+dados/concursos.db
+dados/*.db
+.DS_Store

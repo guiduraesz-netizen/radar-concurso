@@ -1,0 +1,255 @@
+[
+{
+"ativo": 1,
+"cargos_resumo": "Analista de Tecnologia da Informação (4 vagas) e outros",
+"cidade": "São Paulo",
+"detalhe": {
+"descricao": "Banca FCC contratada; edital anunciado para novembro/2026. Analista de TI: R$ 8.654,10 (pode chegar a R$ 11.620,30). Provas em 10 cidades, incluindo Campinas.",
+"previsto": true
+},
+"detalhe_em": null,
+"distancia_km": null,
+"escopo": "SP",
+"fonte": "Manual (previsto)",
+"id": "manual:cetesb",
+"insc_fim": null,
+"insc_inicio": null,
+"insc_obs": null,
+"manual": 1,
+"niveis": [
+"Médio",
+"Superior"
+],
+"orgao": "CETESB – Companhia Ambiental do Estado de SP",
+"primeiro_visto": "2026-11-05T21:51:41",
+"salario_max": 11620.3,
+"salario_unidade": null,
+"titulo": null,
+"uf": "SP",
+"ultimo_visto": null,
+"url": "https://www.novaconcursos.com.br/portal/?p=317118",
+"vagas": null,
+"vagas_txt": "107 vagas (4 de TI)"
+},
+{
+"ativo": 1,
+"cargos_resumo": "Consultor Legislativo – Administração de Rede; Consultor Legislativo – Segurança da Informação; Técnico Legislativo",
+"cidade": "Guarulhos",
+"detalhe": {
+"descricao": "Edital previsto para o 2º semestre de 2026. Taxa prevista: R$ 76,90 (médio) e R$ 111,51 (superior).",
+"previsto": true
+},
+"detalhe_em": null,
+"distancia_km": null,
+"escopo": "SP",
+"fonte": "Manual (previsto)",
+"id": "manual:camara-guarulhos",
+"insc_fim": null,
+"insc_inicio": null,
+"insc_obs": null,
+"manual": 1,
+"niveis": [
+"Médio",
+"Superior"
+],
+"orgao": "Câmara Municipal de Guarulhos",
+"primeiro_visto": "2026-11-05T21:51:41",
+"salario_max": null,
+"salario_unidade": null,
+"titulo": null,
+"uf": "SP",
+"ultimo_visto": null,
+"url": "https://tribunadejundiai.com.br/economia/concursos/concurso-camara-guarulhos-2026-vagas-edital-provas/",
+"vagas": null,
+"vagas_txt": "40 vagas"
+},
+{
+"ativo": 1,
+"cargos_resumo": "Analista de Tecnologia da Informação (2 vagas, R$ 7.930,17); Agente de Suporte a Tecnologias (2 vagas, R$ 4.101,84) e muitos outros",
+"cidade": "Campinas",
+"detalhe": {
+"descricao": "FCC homologada em 22/10/2026; edital sem data.",
+"previsto": true
+},
+"detalhe_em": null,
+"distancia_km": null,
+"escopo": "SP",
+"fonte": "Manual (previsto)",
+"id": "manual:pref-campinas",
+"insc_fim": null,
+"insc_inicio": null,
+"insc_obs": null,
+"manual": 1,
+"niveis": [
+"Fundamental",
+"Médio",
+"Superior"
+],
+"orgao": "Prefeitura de Campinas",
+"primeiro_visto": "2026-11-05T21:51:41",
+"salario_max": 7930.17,
+"salario_unidade": null,
+"titulo": null,
+"uf": "SP",
+"ultimo_visto": null,
+"url": "https://tribunadejundiai.com.br/economia/concursos/concurso-prefeitura-campinas-485-vagas/",
+"vagas": null,
+"vagas_txt": "485 vagas previstas"
+},
+{
+"ativo": 1,
+"cargos_resumo": "Assistente Administrativo (29 vagas, R$ 4.850,00, CLT) e cargos de nível superior",
+"cidade": "São Paulo",
+"detalhe": {
+"descricao": "Banca Quadrix contratada em ago/2026. Provas em São Paulo, Marília, S. J. Campos, Ribeirão Preto e S. J. Rio Preto.",
+"previsto": true
+},
+"detalhe_em": null,
+"distancia_km": null,
+"escopo": "SP",
+"fonte": "Manual (previsto)",
+"id": "manual:coren-sp",
+"insc_fim": null,
+"insc_inicio": null,
+"insc_obs": null,
+"manual": 1,
+"niveis": [
+"Médio",
+"Superior"
+],
+"orgao": "COREN-SP – Conselho Regional de Enfermagem",
+"primeiro_visto": "2026-11-05T21:51:41",
+"salario_max": 4850.0,
+"salario_unidade": null,
+"titulo": null,
+"uf": "SP",
+"ultimo_visto": null,
+"url": "https://concursosnobrasil.com/concursos/sp/2026/08/18/concurso-coren-sp-tem-edital-previsto-para-76-vagas-de-niveis-medio-e-superior/",
+"vagas": null,
+"vagas_txt": "76 vagas"
+},
+{
+"ativo": 1,
+"cargos_resumo": "Técnico de Suporte em Informática (editais avulsos, CLT)",
+"cidade": "Campinas",
+"detalhe": {
+"descricao": "Abre seletivos de TI várias vezes por ano, com prazo de ~2 semanas. Olhe os editais toda semana.",
+"previsto": true
+},
+"detalhe_em": null,
+"distancia_km": null,
+"escopo": "SP",
+"fonte": "Manual (previsto)",
+"id": "manual:funcamp",
+"insc_fim": null,
+"insc_inicio": null,
+"insc_obs": null,
+"manual": 1,
+"niveis": [
+"Técnico"
+],
+"orgao": "FUNCAMP – Fundação de Desenvolvimento da Unicamp",
+"primeiro_visto": "2026-11-05T21:51:41",
+"salario_max": 4099.64,
+"salario_unidade": null,
+"titulo": null,
+"uf": "SP",
+"ultimo_visto": null,
+"url": "https://www.funcamp.unicamp.br",
+"vagas": null,
+"vagas_txt": "1 por edital"
+},
+{
+"ativo": 1,
+"cargos_resumo": "Diversos cargos federais (TI ainda não confirmado)",
+"cidade": null,
+"detalhe": {
+"descricao": "Prova prevista para o 2º semestre de 2027; depende de autorização.",
+"previsto": true
+},
+"detalhe_em": null,
+"distancia_km": null,
+"escopo": "NACIONAL",
+"fonte": "Manual (previsto)",
+"id": "manual:cnu-2027",
+"insc_fim": null,
+"insc_inicio": null,
+"insc_obs": null,
+"manual": 1,
+"niveis": [
+"Superior"
+],
+"orgao": "CNU 2027 – Concurso Nacional Unificado",
+"primeiro_visto": "2026-11-05T21:51:41",
+"salario_max": null,
+"salario_unidade": null,
+"titulo": null,
+"uf": "NACIONAL",
+"ultimo_visto": null,
+"url": "https://blog.grancursosonline.com.br/cnu-2027-ate-3-mil-vagas/amp/",
+"vagas": null,
+"vagas_txt": "2.000 a 3.000 (estimativa)"
+},
+{
+"ativo": 1,
+"cargos_resumo": "Escriturário (Agente Comercial; Agente de Tecnologia não confirmado)",
+"cidade": null,
+"detalhe": {
+"descricao": "Total com benefícios ~R$ 6.412,42. Banca em escolha (Cesgranrio, FGV ou Cebraspe).",
+"previsto": true
+},
+"detalhe_em": null,
+"distancia_km": null,
+"escopo": "NACIONAL",
+"fonte": "Manual (previsto)",
+"id": "manual:banco-do-brasil",
+"insc_fim": null,
+"insc_inicio": null,
+"insc_obs": null,
+"manual": 1,
+"niveis": [
+"Médio"
+],
+"orgao": "Banco do Brasil",
+"primeiro_visto": "2026-11-05T21:51:41",
+"salario_max": 4189.05,
+"salario_unidade": null,
+"titulo": null,
+"uf": "NACIONAL",
+"ultimo_visto": null,
+"url": "https://diariodopara.com.br/concursos-e-empregos/concurso-banco-do-brasil-avanca-e-3-bancas-disputam-organizacao-veja-salarios-e-requisitos/",
+"vagas": null,
+"vagas_txt": "A definir"
+},
+{
+"ativo": 1,
+"cargos_resumo": "Técnico Bancário – Tecnologia da Informação",
+"cidade": null,
+"detalhe": {
+"descricao": "Edital esperado em 2027. Em 2024 houve 2 mil vagas de TI (salário de referência R$ 3.762).",
+"previsto": true
+},
+"detalhe_em": null,
+"distancia_km": null,
+"escopo": "NACIONAL",
+"fonte": "Manual (previsto)",
+"id": "manual:caixa",
+"insc_fim": null,
+"insc_inicio": null,
+"insc_obs": null,
+"manual": 1,
+"niveis": [
+"Médio"
+],
+"orgao": "Caixa Econômica Federal",
+"primeiro_visto": "2026-11-05T21:51:41",
+"salario_max": 3762.0,
+"salario_unidade": null,
+"titulo": null,
+"uf": "NACIONAL",
+"ultimo_visto": null,
+"url": "https://portaldeprefeitura.com.br/oportunidades/oncurso-caixa-tecnico-bancario-edital-previsto-2027/630444/",
+"vagas": null,
+"vagas_txt": "A definir"
+}
+]
