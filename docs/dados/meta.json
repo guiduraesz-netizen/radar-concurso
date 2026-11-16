@@ -1,14 +1,14 @@
 {
- "inicio": "2026-11-15T22:48:00",
- "fim": "2026-11-15T22:48:06",
- "total": 186,
- "novos": 0,
+ "inicio": "2026-11-16T17:16:25",
+ "fim": "2026-11-16T17:18:32",
+ "total": 190,
+ "novos": 10,
  "erros": [],
  "log": [
-  "22:48:00 PCI SP: 180 concursos",
-  "22:48:00 PCI NACIONAL: 6 concursos",
-  "22:48:03 186 concursos na lista, 0 novos, 3 para detalhar",
-  "22:48:06 Atualização concluída"
+  "17:16:25 PCI SP: 184 concursos",
+  "17:16:25 PCI NACIONAL: 6 concursos",
+  "17:16:26 190 concursos na lista, 10 novos, 141 para detalhar",
+  "17:18:32 Atualização concluída"
  ],
  "repo": "guiduraesz-netizen/radar-concurso"
 }
